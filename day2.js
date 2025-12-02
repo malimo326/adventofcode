@@ -6,16 +6,33 @@ const ranges = input.split(",");
 
 function isInvalidID(num) {
   const str = String(num);
+  const len = str.length;
 
-  // Check if the string is made of a pattern repeated twice
-  // The pattern must be at least 1 digit, so the total length must be even
-  if (str.length % 2 !== 0) return false;
+  // Try all possible pattern lengths from 1 to len/2
+  for (let patternLen = 1; patternLen <= len / 2; patternLen++) {
+    // Check if the string length is divisible by pattern length
+    if (len % patternLen === 0) {
+      const pattern = str.substring(0, patternLen);
+      const repetitions = len / patternLen;
 
-  const mid = str.length / 2;
-  const firstHalf = str.substring(0, mid);
-  const secondHalf = str.substring(mid);
+      // Check if we have at least 2 repetitions
+      if (repetitions >= 2) {
+        // Check if the entire string is made of this pattern repeated
+        let isValid = true;
+        for (let i = 0; i < len; i++) {
+          if (str[i] !== pattern[i % patternLen]) {
+            isValid = false;
+            break;
+          }
+        }
+        if (isValid) {
+          return true;
+        }
+      }
+    }
+  }
 
-  return firstHalf === secondHalf;
+  return false;
 }
 
 let total = 0;
